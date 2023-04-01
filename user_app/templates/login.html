@@ -9,6 +9,7 @@
     <h4>{%if msg%}{{msg}}{%endif%}</h4>
     <form method="post">
       {% csrf_token %} {{ form.as_p }}
+      {{id}} {{user}} {{pw}}
       <button type="submit">로그인</button>
     </form>
     
