@@ -1,7 +1,7 @@
-from django import forms
 from .models import Users
+from rest_framework import serializers
 
-class LoginForm(forms.ModelForm):
+class LoginSerializer(serializers.ModelSerializer):
     class Meta:
         model = Users
         fields = ['id', 'password']

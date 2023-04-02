@@ -19,5 +19,5 @@ from user_app.views import login_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-     path("login", login_view, name="login"),
+    path('dropbox/', include('user_app.urls')),
 ]
