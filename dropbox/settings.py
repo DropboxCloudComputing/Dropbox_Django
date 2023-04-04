@@ -23,12 +23,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = ''
+SECRET_KEY = 'd@+!dgu69^36&3z=pyao42=3_%j$-468&i+y&inv(#s7(i9(ku'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+# DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost','127.0.0.1']
 
 
 # Application definition
@@ -40,7 +41,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'app',
     'user_app',
 ]
 
@@ -83,7 +83,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'test_db',#db명
         'USER': 'root', #db user 이름
-        'PASSWORD': '', #db password
+        'PASSWORD': '00000000', #db password
         'HOST': 'localhost', #나중에 aws로 연결
         'PORT': '3306', #mysql 포트번호
     }
