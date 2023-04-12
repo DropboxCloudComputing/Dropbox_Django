@@ -37,7 +37,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'app',
 ]
 
 MIDDLEWARE = [
@@ -77,9 +76,9 @@ WSGI_APPLICATION = 'dropbox.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': '',#db명
-        'USER': '', #db user 이름
-        'PASSWORD': '', #db password
+        'NAME': 'dropbox_rdb',#db명
+        'USER': 'root', #db user 이름
+        'PASSWORD': '8349dbabab1212!@', #db password
         'HOST': 'localhost', #나중에 aws로 연결
         'PORT': '3306', #mysql 포트번호
     }
