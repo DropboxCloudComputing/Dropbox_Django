@@ -10,8 +10,8 @@ class Users(models.Model):
     updated_at = models.DateTimeField(auto_now_add=True)
 
  
-    USERNAME_FIELD = 'id'  # 로그인 ID로 사용할 필드
-    REQUIRED_FIELDS = ['id','password'] # 필수 작성 필드
+    USERNAME_FIELD = 'email'  # 로그인 ID로 이메일 사용(Id 필드)
+    REQUIRED_FIELDS = ['email','password'] # 필수 작성 필드
 
     class Meta:
         managed = False

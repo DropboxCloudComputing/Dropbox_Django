@@ -8,9 +8,9 @@ from django.http import JsonResponse
 def login_view(request):
     if request.method == 'POST':
         data = JSONParser().parse(request)
-        search_id = data['id']
-        obj = Users.objects.get(id=search_id)
-
+        search_email = data['email'] # email을 id로 사용
+        obj = Users.objects.get(email=search_email)
+        
         if data['password'] == obj.password:
             return HttpResponse(status=200)
         else:
