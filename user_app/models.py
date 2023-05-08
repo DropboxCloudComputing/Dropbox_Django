@@ -5,10 +5,10 @@ from django.contrib.auth.models import AbstractBaseUser
 class Users(AbstractBaseUser):
     username = None
     last_login = None
-    id = models.CharField(primary_key=True, max_length=255)
-    full_name = models.CharField(max_length=255)
-    email = models.CharField(unique=True, max_length=255)
-    password = models.CharField(max_length=255)
+    id = models.BigIntegerField(primary_key=True)
+    full_name = models.CharField(max_length=45)
+    email = models.CharField(unique=True, max_length=45)
+    password = models.CharField(max_length=45)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
 
@@ -20,8 +20,3 @@ class Users(AbstractBaseUser):
         managed = False
         db_table = 'users'
 
-    # def __init__ (self, id, full_name, email, password):
-    #     self.id = id
-    #     self.full_name = full_name
-    #     self.email = email
-    #     self.password = password

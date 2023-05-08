@@ -19,7 +19,7 @@ urlpatterns = [
     # path('', include(router.urls)),
 
     # 토큰
-    path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    path('token/verify/', TokenVerifyView.as_view(), name='token_verify'),
+    path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'), # Token Obtain by email and pw
+    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'), # obtain new access token by refresh
+    path('token/verify/', TokenVerifyView.as_view(), name='token_verify'), # check token is valid or not
 ]

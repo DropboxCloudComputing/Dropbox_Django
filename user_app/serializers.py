@@ -35,7 +35,7 @@ class SigninSirializer(serializers.ModelSerializer):
         if Users.objects.filter(email=email).exists():
             
 
-            if user.password != password: #not check_password(user.password ,password)->암호롸
+            if user.password != password: #not check_password(user.password ,password)->암호화
                 return JsonResponse({
                     "Response Code": status.HTTP_404_NOT_FOUND,
                     "message": 'Check Your Email or Password'
@@ -46,7 +46,6 @@ class SigninSirializer(serializers.ModelSerializer):
                     "Response Code": status.HTTP_404_NOT_FOUND,
                     "message": 'User does not exist'
                 })
-            #raise serializers.ValidationError("User does not exist")
         
         user = Users.objects.get(id=user.id)
 
