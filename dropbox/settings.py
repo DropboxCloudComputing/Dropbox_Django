@@ -50,50 +50,6 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt.token_blacklist',
 ]
 
-### AWS
-#AWS_ACCESS_KEY_ID = 'cloud-computing-a'
-#AWS_SECRET_ACCESS_KEY = 'cloud-computing-A'
-#AWS_REGION = 'ap-northeast-2'
-
-### S3 Storages
-#AWS_STORAGE_BUCKET_NAME = 'bucket-cca'
-#AWS_S3_CUSTOM_DOMAIN = '%s.s3.%s.amazonaws.com' % (AWS_STORAGE_BUCKET_NAME, AWS_REGION)
-#AWS_S3_OBJECT_PARAMETERS = {
-    #'CacheControl': 'max-age = 86400'
-#}
-#DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-
-USE_S3 = os.getenv('USE_S3') == 'TRUE' 
-
-if USE_S3:
-    # aws settings
-    AWS_ACCESS_KEY_ID = os.getenv('cloud-computing-a')
-    AWS_SECRET_ACCESS_KEY = os.getenv('cloud-computing-A')
-    AWS_STORAGE_BUCKET_NAME = os.getenv('bucket-cca')
-    AWS_DEFAULT_ACL = 'public-read'
-    AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
-    AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
-
-    # s3 static settings
-    AWS_LOCATION = 'static'
-    STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_LOCATION}/'
-    STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-
-    # s3 public media settings
-    PUBLIC_MEDIA_LOCATION = 'media'
-    MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{PUBLIC_MEDIA_LOCATION}/'
-    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'    
-
-else:
-    STATIC_URL = '/staticfiles/'
-    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-
-STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
-
-MEDIA_URL = '/mediafiles/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'mediafiles')
-
-
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
