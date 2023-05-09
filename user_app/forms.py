@@ -1,11 +1,23 @@
 from django import forms
 from django.contrib.auth.models import User
-from . import models
+from django.contrib.auth.forms import UserCreationForm
+from django import forms
+# from .models import Users
 
-# class SignUpForm(forms.Form) : 
-#     full_name = models.CharField(max_length=255)
-#     email = models.EmailField()
-#      #비밀번호
-#     password = models.CharField(widget=forms.PasswordInput, max_length=255)
-#     #비밀번호 확인
-#     password1 = models.CharField(widget=forms.PasswordInput, label="Confirm Password", max_length=255) 
+
+class UserCreateForm(UserCreationForm):
+    full_name = forms.CharField(label="이름")
+    email = forms.EmailField(label="이메일")
+    password1 = forms.CharField(label="비밀번호",
+        widget=forms.PasswordInput)
+
+    class Meta:
+        model = User
+        fields = ["username", "email", "password1"]
+
+    def save(self, commit=True):
+        user = super(UserCreateForm, self).save(commit=False)
+        user.email = self.cleaned_data("email")
+        if commit:
+            user.save()
+        return user

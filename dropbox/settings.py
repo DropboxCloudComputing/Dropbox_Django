@@ -29,7 +29,7 @@ SECRET_KEY = 'd@+!dgu69^36&3z=pyao42=3_%j$-468&i+y&inv(#s7(i9(ku'
 DEBUG = True
 # DEBUG = False
 
-ALLOWED_HOSTS = ['localhost','127.0.0.1']
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
     'user_app',
 ]
 
