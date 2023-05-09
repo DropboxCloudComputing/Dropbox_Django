@@ -1,6 +1,5 @@
 from django.contrib import admin
 from django.urls import path, include
-# from user_app.views import SignInView, SignOutView
 
 
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -11,9 +10,8 @@ from . import views
 
 urlpatterns = [
     path("signup/", views.signup, name="signup"),
-    # path('admin/', admin.site.urls),
     path('login/', views.login_view),
-    path('logout/', views.logout)
+    path('logout/', views.logout),
 
     # 토큰
     path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'), # Token Obtain by email and pw

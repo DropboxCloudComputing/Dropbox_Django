@@ -41,6 +41,7 @@ class Users(AbstractBaseUser):
     full_name = models.CharField(max_length=45)
     email = models.CharField(unique=True, max_length=45)
     password = models.CharField(max_length=45)
+    token = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
 # is_active, is_admin -> django user model 필수 필드

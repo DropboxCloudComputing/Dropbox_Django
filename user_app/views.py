@@ -1,17 +1,12 @@
 from django.contrib.auth import authenticate#, login
 from django.http import HttpResponse
-<<<<<<< HEAD
 from .models import Users
-=======
 from django.views.decorators.csrf import csrf_exempt
 from .serializers import SigninSirializer
->>>>>>> 5a28d85f76c1b8d824f2e5b4443f74e947059812
 from rest_framework.parsers import JSONParser
 from django.http import JsonResponse
-
 from .forms import UserCreateForm
 from django.shortcuts import redirect, render
-
 from django.contrib import messages
 
 
@@ -21,12 +16,15 @@ def login_view(request):
             data = JSONParser().parse(request) # password = request.data['password']
             tokenData = SigninSirializer.validate(data)
 
+            email = data['email']
+            user = Users.objects.get(email = email)
+            SigninSirializer.update(user, tokenData
+                                    )
             response = JsonResponse({
                 'user' : str(tokenData['user']),
-                'refresh_token' : tokenData['refresh_token'],
-                'access_token' : tokenData['access_token']
+                'access_token' : tokenData['access_token'],
+                'refresh_token': tokenData['refresh_token']
             })
-            response.set_cookie('access_token', tokenData['access_token']) # cookie로 header에 access token 보냄
 
             return response
         
@@ -37,22 +35,26 @@ def login_view(request):
 
 
 def logout(request):
-<<<<<<< HEAD
-    if request.method == 'POST':
+
+    if request.method == 'POST' :
         response = JsonResponse({
-            "message": "success"
+            "ResponseCode":200,
+            "message" : "success"
+        })
+    else:
+         response = JsonResponse({
+            "message" : "error"
         })
     return response
 
 
-# 회원가입 폼 처리 뷰
 def signup(request):
     # 입력된 정보로 회원가입 폼 셍상
     if request.method == "POST":
         form = UserCreateForm(request.POST)
         if form.is_valid():
             form.save(commit=False)
-            username = form.cleaned_data.get('username')
+            username = form.cleaned_data.get('full_name')
             raw_password = form.cleaned_data.get('password1')
             # 추가 정보 저장
             user = Users.objects.create(id=form.id,
@@ -73,11 +75,3 @@ def signup(request):
     else:
         form = UserCreateForm()
     return render(request, 'user_app/signup.html', {'form': form})
-=======
-        if request.method == 'POST' :
-            response = JsonResponse({
-                "message" : "success"
-            })
-            response.set_cookie('access_token', '') #header cookie정보 비우기
-        return response
->>>>>>> 5a28d85f76c1b8d824f2e5b4443f74e947059812

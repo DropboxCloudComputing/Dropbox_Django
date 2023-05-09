@@ -5,12 +5,6 @@ from django.http import JsonResponse
 from rest_framework import status
 from django.contrib.auth.hashers import check_password
 
-class LoginSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Users
-        fields = ['email', 'password']
-
-
 class SigninSirializer(serializers.ModelSerializer):
     email = serializers.CharField(
         required = True,
@@ -20,6 +14,10 @@ class SigninSirializer(serializers.ModelSerializer):
         required = True,
         write_only = True,
         style= {'input_type' : 'password'}
+    )
+    token = serializers.CharField(
+        required = True,
+        write_only = True,
     )
     class Meta(object):
         model = Users
@@ -56,3 +54,7 @@ class SigninSirializer(serializers.ModelSerializer):
             'access_token' : str(token.access_token)
         }
         return data
+    
+    def update(instance, validated_data):
+        instance.token = validated_data.get('refresh_token', instance.token)
+        instance.save()
