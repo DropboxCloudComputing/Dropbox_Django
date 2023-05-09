@@ -1,6 +1,11 @@
 from django.contrib.auth import authenticate#, login
 from django.http import HttpResponse
+<<<<<<< HEAD
 from .models import Users
+=======
+from django.views.decorators.csrf import csrf_exempt
+from .serializers import SigninSirializer
+>>>>>>> 5a28d85f76c1b8d824f2e5b4443f74e947059812
 from rest_framework.parsers import JSONParser
 from django.http import JsonResponse
 
@@ -10,19 +15,29 @@ from django.shortcuts import redirect, render
 from django.contrib import messages
 
 
-def login_view(request):
-    if request.method == 'POST':
-        data = JSONParser().parse(request)
-        search_id = data['id']
-        obj = Users.objects.get(id=search_id)
 
-        if data['password'] == obj.password:
-            return HttpResponse(status=200)
-        else:
-            return HttpResponse(status=400)
+def login_view(request):
+        if request.method == 'POST' :
+            data = JSONParser().parse(request) # password = request.data['password']
+            tokenData = SigninSirializer.validate(data)
+
+            response = JsonResponse({
+                'user' : str(tokenData['user']),
+                'refresh_token' : tokenData['refresh_token'],
+                'access_token' : tokenData['access_token']
+            })
+            response.set_cookie('access_token', tokenData['access_token']) # cookie로 header에 access token 보냄
+
+            return response
+        
+        return JsonResponse({
+              "message":"http error"
+        })
+  
 
 
 def logout(request):
+<<<<<<< HEAD
     if request.method == 'POST':
         response = JsonResponse({
             "message": "success"
@@ -58,3 +73,11 @@ def signup(request):
     else:
         form = UserCreateForm()
     return render(request, 'user_app/signup.html', {'form': form})
+=======
+        if request.method == 'POST' :
+            response = JsonResponse({
+                "message" : "success"
+            })
+            response.set_cookie('access_token', '') #header cookie정보 비우기
+        return response
+>>>>>>> 5a28d85f76c1b8d824f2e5b4443f74e947059812

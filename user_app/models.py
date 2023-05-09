@@ -31,12 +31,16 @@ class UserManager(BaseUserManager) :
         return superuser
 
 
+
+
 # Create your models here.
 class Users(AbstractBaseUser):
-    id = models.CharField(primary_key=True, max_length=255)
-    full_name = models.CharField(max_length=255)
-    email = models.CharField(max_length=255)
-    password = models.CharField(max_length=255)
+    username = None
+    last_login = None
+    id = models.BigIntegerField(primary_key=True)
+    full_name = models.CharField(max_length=45)
+    email = models.CharField(unique=True, max_length=45)
+    password = models.CharField(max_length=45)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
 # is_active, is_admin -> django user model 필수 필드
@@ -45,14 +49,12 @@ class Users(AbstractBaseUser):
 
     objects = UserManager()
 
-    USERNAME_FIELD = 'id'  # 로그인 ID로 사용할 필드
-    REQUIRED_FIELDS = ['id', 'password']  # 필수 작성 필드
+ 
+    USERNAME_FIELD = 'email'  # 로그인 ID로 이메일 사용(Id 필드)
+    REQUIRED_FIELDS = ['password'] # 필수 작성 필드
 
-
-    # @property
-    # def is_staff(self):
-    #     return self.is_admin
 
     class Meta:
         managed = False
         db_table = 'users'
+
