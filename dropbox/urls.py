@@ -17,6 +17,9 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+from app.views import FileList
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/file_list', FileList.as_view(), name = 'File_list')
 ]
