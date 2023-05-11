@@ -61,16 +61,20 @@ class FilesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Files 
         fields = '__all__'
+        read_only_fields = ('id', 'created_at', 'last_modified')
         
-class FilesMemoSerializer(serializers.ModelSerializer):
+        
+        
+class MemoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Files
-        fields = ('memo', 'last_modified', 'id')
-        read_only_fields = ('id', 'file_name', 'user_id', 'last_modified', 'version', 'memo')
-
+        fields = ('id', 'memo')
+        read_only_fields = ('id',)
+        
     def update(self, instance, validated_data):
-        instance.memo = validated_data.get('memo', instance.content)
+        instance.memo = validated_data.get('memo', instance.memo)
         instance.last_modified = timezone.now()
         instance.save()
         return instance
+
     

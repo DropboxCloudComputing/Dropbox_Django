@@ -16,23 +16,31 @@ class FileDetail(APIView):
     def get(self, request, id):
         try:   
             model = Files.objects.get(id = id)            
-        except:
+        except Files.DoesNotExist:
             return Response({'message': 'The file does not exist'}, status=status.HTTP_404_NOT_FOUND)
 
         serializers = FilesSerializer(model)
         return Response(serializers.data)
-
-class MemoUpdate(APIView):
-    serializer_class = FilesMemoSerializer
     
-    def put(self, request, id):
-        try:
-            file = Files.objects.get(pk=id)
+class MemoUpdate(APIView):
+    def get(self, request, id):
+        try:   
+            model = Files.objects.get(id = id)            
         except Files.DoesNotExist:
             return Response({'message': 'The file does not exist'}, status=status.HTTP_404_NOT_FOUND)
 
-        serializer = FilesMemoSerializer(file, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        serializers = FilesSerializer(model)
+        return Response(serializers.data)
+    
+    def put(self, request, id):
+        try:
+            model = Files.objects.get(id = id)
+        except Files.DoesNotExist:
+            return Response({'message': 'The file does not exist'}, status=status.HTTP_404_NOT_FOUND)
+
+        serializers = MemoSerializer(model, data=request.data)
+        
+        if serializers.is_valid():
+            serializers.save()
+            return Response(serializers.data, status=status.HTTP_200_OK)
+        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)

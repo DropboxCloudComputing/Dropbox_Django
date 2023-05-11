@@ -23,5 +23,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/file_list', FileList.as_view(), name = 'File_list'),
     path('api/file_list/<int:id>' , FileDetail.as_view(), name = 'File_detail'),
-    path('api/file_list/<int:id>/memo_update' , MemoUpdate.as_view(), name = 'Memo_update'),
+    path('api/memos/<int:id>' , MemoUpdate.as_view(), name = 'Memo_Detail'),
 ]
