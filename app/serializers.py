@@ -71,10 +71,14 @@ class MemoSerializer(serializers.ModelSerializer):
         fields = ('id', 'memo')
         read_only_fields = ('id',)
         
-    def update(self, instance, validated_data):
+'''    def update(self, instance, validated_data):
         instance.memo = validated_data.get('memo', instance.memo)
         instance.last_modified = timezone.now()
         instance.save()
         return instance
-
+    
+    def delete(self, instance, validated_data):
+        instance.memo = ""
+        return instance
+'''
     

@@ -23,6 +23,8 @@ class FileDetail(APIView):
         return Response(serializers.data)
     
 class MemoUpdate(APIView):
+    serializer_class = MemoSerializer
+    
     def get(self, request, id):
         try:   
             model = Files.objects.get(id = id)            
@@ -37,10 +39,22 @@ class MemoUpdate(APIView):
             model = Files.objects.get(id = id)
         except Files.DoesNotExist:
             return Response({'message': 'The file does not exist'}, status=status.HTTP_404_NOT_FOUND)
-
+        
+        model.last_modified = timezone.now()
         serializers = MemoSerializer(model, data=request.data)
         
         if serializers.is_valid():
             serializers.save()
             return Response(serializers.data, status=status.HTTP_200_OK)
         return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def delete(self, request, id):
+        Memo = Files.objects.get(id = id)
+        Memo.memo =''
+        Memo.last_modified = timezone.now()
+        serializers = MemoSerializer(Memo, data=request.data)
+        if serializers.is_valid():
+            serializers.save()
+            return Response(serializers.data, status=status.HTTP_200_OK)
+        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+        
