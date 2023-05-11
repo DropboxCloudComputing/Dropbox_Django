@@ -11,6 +11,16 @@ class FileList(APIView):
         model = Files.objects.all()
         serializer = FilesSerializer(model, many = True)
         return Response(serializer.data)
+    
+class FileDetail(APIView):
+    def get(self, request, id):
+        try:   
+            model = Files.objects.get(id = id)            
+        except:
+            return Response({'message': 'The file does not exist'}, status=status.HTTP_404_NOT_FOUND)
+
+        serializers = FilesSerializer(model)
+        return Response(serializers.data)
 
 class MemoUpdate(APIView):
     serializer_class = FilesMemoSerializer

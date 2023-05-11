@@ -73,3 +73,4 @@ class FilesMemoSerializer(serializers.ModelSerializer):
         instance.last_modified = timezone.now()
         instance.save()
         return instance
+    
