@@ -1,13 +1,14 @@
-from django.contrib.auth import authenticate#, login
+# from django.contrib.auth import authenticate
 from django.http import HttpResponse
 from .models import Users
-from django.views.decorators.csrf import csrf_exempt
+# from django.views.decorators.csrf import csrf_exempt
 from .serializers import SigninSirializer
 from rest_framework.parsers import JSONParser
+from rest_framework.renderers import JSONRenderer
 from django.http import JsonResponse
-from .forms import UserCreateForm
-from django.shortcuts import redirect, render
+# from django.shortcuts import redirect, render
 from django.contrib import messages
+from .UserSerializer import UserSerializer
 
 
 
@@ -35,8 +36,7 @@ def login_view(request):
 
 
 def logout(request):
-
-    if request.method == 'POST' :
+    if request.method == 'POST':
         response = JsonResponse({
             "ResponseCode":200,
             "message" : "success"
@@ -44,34 +44,61 @@ def logout(request):
     else:
          response = JsonResponse({
             "message" : "error"
-        })
+         })
     return response
 
 
 def signup(request):
-    # 입력된 정보로 회원가입 폼 셍상
+    # POST 요청으로 JSON 객체 받아오면
     if request.method == "POST":
-        form = UserCreateForm(request.POST)
-        if form.is_valid():
-            form.save(commit=False)
-            username = form.cleaned_data.get('full_name')
-            raw_password = form.cleaned_data.get('password1')
-            # 추가 정보 저장
-            user = Users.objects.create(id=form.id,
-                                        full_name=form.username,
-                                        email=request.POST['email'],
-                                        password=form.password,
-                                        created_at=form.date_joined,
-                                        updated_at=form.date_joined
-                                        )
-            user.save()
-            messages.success(request, '회원가입이 완료되었습니다.')
-            # # 사용자 인증
-            # user = authenticate(username=username, password=raw_password)
-            # # 회원가입 완료 후 로그인
-            # login(request, user)
-            # return redirect('index')
-            return redirect('login_view')
-    else:
-        form = UserCreateForm()
-    return render(request, 'user_app/signup.html', {'form': form})
+        # 데이터 파싱 + 값 가져오기
+        data = JSONParser().parse(request)
+
+        # print(data)
+
+        serializer = UserSerializer(data=data)
+
+        # print(serializer.is_valid())
+        # print(serializer.errors)
+        # print(serializer.validated_data)
+
+        if serializer.is_valid() :
+
+            input_email = data['email'] # 입력된 email
+
+            if Users.objects.filter(email = input_email).exists() : # 해당 email로 회원 조회
+                # 존재하면 중복 id HTTP응답
+                response = JsonResponse({
+                    "ResponseCode":400,
+                    "description" : "중복 id"
+                })
+                return HttpResponse(status=400)
+
+            elif '@' not in input_email or '.' not in input_email : # 형식이 맞지 않는 경우
+                # 실패 HTTP응답
+                response = JsonResponse({
+                    "ResponseCode":400,
+                    "description" : "형식이 맞지 않음"
+                })
+                return HttpResponse(status=400)
+
+            else :
+                serializer.save()
+                response = JsonResponse({
+                    "ResponseCode":200
+                })
+            return response
+        
+        else :
+            response = JsonResponse({
+                    "ResponseCode":400,
+                    "description" : "형식이 맞지 않음"
+                })
+            return HttpResponse(status=400)
+            
+
+def modify(request):
+    # validated = serializer.validated_data
+    # instance = serializer.create(validated_data=validated)
+    # print(instance)
+    return 0
