@@ -26,7 +26,7 @@ class MemoList(APIView):
     serializer_class = MemoSerializer
 
     def get(self, request):
-        model = Files.objects.all().values('id', 'memo')
+        model = Files.objects.all().values('id', 'memo', 'last_modified')
         serializer = MemoSerializer(model, many = True)
         return Response(serializer.data)
 
