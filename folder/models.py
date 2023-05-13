@@ -26,7 +26,7 @@ class Folder(models.Model):
 
 
 class Permission(models.Model):
-    id = models.BigIntegerField(primary_key=True)
+    id = models.BigAutoField(primary_key=True)
     users = models.ForeignKey(Users, models.DO_NOTHING)
     folder = models.ForeignKey(Folder, models.DO_NOTHING)
 

@@ -5,6 +5,7 @@ from rest_framework.renderers import JSONRenderer
 from .selializer import *
 from user_app.models import Users
 # from user_app.views import 
+from rest_framework import status
 import itertools
 
 def getSharedFolders(request):
@@ -13,14 +14,22 @@ def getSharedFolders(request):
         pemissionQueryset = Permission.objects.filter(users = user)
         serializer = GetSharedFolderSirializer(pemissionQueryset, many=True)
         folder_data = list(itertools.chain(*[d["folder"] for d in serializer.data]))
-        #folder_data = list(itertools.chain.from_iterable(serializer.data[0]['folder']))
-        # print(folder_data)
         return JsonResponse(folder_data, safe = False)
 
 
 def shareFolder(request):
     if request.method == 'POST':
         data = JSONParser().parse(request)
-        return JsonResponse(data)
+        recieverArray = data['reciever']
+        folder = Folder.objects.get(id=data['folderId'])
+
+        for reciever in recieverArray:
+            user = Users.objects.get(email = reciever)
+            permission = Permission.objects.create(users=user, folder=folder)
+            serializer = SharedFolderSirializer(data=permission.__dict__)
+            if serializer.is_valid():
+                serializer.save()
+
+        return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
     
-#def contentInFolderxs
+# 
