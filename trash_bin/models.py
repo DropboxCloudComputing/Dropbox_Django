@@ -37,6 +37,7 @@ class TrashBin(models.Model):
         if files_obj.removed:
             trashbin_obj = cls(files_id=files_obj.id, folder_id=files_obj.folder_id, users_id=files_obj.user_id.id)
             trashbin_obj.save()
-            
+        else :
+            print(" instance not removed ")
     # files_obj = Files.objects.create(file_name='example.txt', size=1024, favorites=True, folder_id=1, user_id=user_obj, memo='example memo', version=1, removed=True)
     # Trashbin.create(files_obj)
