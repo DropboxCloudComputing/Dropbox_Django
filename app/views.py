@@ -65,4 +65,4 @@ class MemoDetail(APIView):
             serializers.save()
             return Response(serializers.data, status=status.HTTP_200_OK)
         return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
-        
+
