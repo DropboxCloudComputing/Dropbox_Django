@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Files, Memo
+from .models import Files
 from django.utils import timezone
 import os
 

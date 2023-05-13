@@ -23,14 +23,3 @@ class Files(models.Model):
         db_table = "files"
         
         
-class Memo(models.Model):
-    id = models.AutoField(primary_key=True)
-    title = models.CharField(max_length=255)
-    content = models.TextField()
-    created_at = models.DateTimeField(default=timezone.now)
-    last_modified = models.DateTimeField(default=timezone.now)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-
-    class Meta:
-        managed = True
-        db_table = "memo"
