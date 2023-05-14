@@ -23,6 +23,5 @@ from django.views.generic.base import TemplateView
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('user_app/', include("user_app.urls")),
-    # path('dropbox/', include('user_app.urls')),
     path('folders/', include("folder.urls")),
 ]
