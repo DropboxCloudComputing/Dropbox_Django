@@ -1,5 +1,7 @@
 from django.db import models
 from user_app.models import Users
+from django.conf import settings
+
 
 # Create your models here.
 class Folder(models.Model):
@@ -8,7 +10,7 @@ class Folder(models.Model):
     created_at = models.DateTimeField(blank=True, null=True)
     updated_at = models.DateTimeField(blank=True, null=True)
     users = models.ForeignKey(Users, models.DO_NOTHING)
-    pfolder = models.ForeignKey("self", models.DO_NOTHING, db_column="folder_id")
+    pfolder = models.ForeignKey('self', models.DO_NOTHING, db_column="folder_id")
 
     class Meta:
         managed = False
