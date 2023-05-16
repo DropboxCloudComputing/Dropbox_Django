@@ -56,6 +56,6 @@ class Users(AbstractBaseUser):
 
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'users'
 

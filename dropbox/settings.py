@@ -11,10 +11,15 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 from pathlib import Path
-import pymysql
 from datetime import timedelta #for jwt
+import os
+from dotenv import load_dotenv
 
-pymysql.install_as_MySQLdb()
+load_dotenv()
+
+# Get the S3 keys from environment variables
+AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -42,9 +47,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
     'app',
     'rest_framework',# 프레임워크 추가
+    'files',
     'user_app',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
@@ -89,8 +94,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'kkhugit',#db명
         'USER': 'root', #db user 이름
-        'PASSWORD': '00000000', #db password
-        'HOST': 'localhost', #나중에 aws로 연결
+        'PASSWORD': 'root', #db password
+        'HOST': '127.0.0.1', #나중에 aws로 연결
         'PORT': '3306', #mysql 포트번호
     }
 }
