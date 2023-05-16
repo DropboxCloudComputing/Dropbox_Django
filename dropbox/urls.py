@@ -20,7 +20,11 @@ from user_app.views import login_view
 from django.views.generic.base import TemplateView
 
 
-urlpatterns = [
+from django.contrib import admin
+from django.urls import path, include
+from django.views.generic.base import TemplateView
+
+urlpatterns=[
     path('admin/', admin.site.urls),
     path('user_app/', include("user_app.urls")),
     path('dropbox/', include('user_app.urls')),

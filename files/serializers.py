@@ -1,8 +1,9 @@
 from rest_framework import serializers
 from .models import Files
 import os
+from pytz import timezone
 
-
+### 파일 업로드
 class FileUploadSerializer(serializers.ModelSerializer):
     file = serializers.FileField(write_only=True)
 
@@ -29,6 +30,7 @@ class FileUploadSerializer(serializers.ModelSerializer):
         return super().create(validated_data)
 
 
+### 파일 삭제
 class FileDeleteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Files
@@ -47,3 +49,19 @@ class FileDeleteSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("You don't have permission to delete this file.")
 
         return attrs
+    
+
+
+### 파일 수정
+   
+
+### 파일 전체 조회
+class FileListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Files
+        fields = ('id', 'favorites', 'folder_id', 'memo', 'version', 's3key', 'file')
+        read_only_fields = ('id', 'favorites', 'folder_id', 'created_at', 'user', 'memo', 's3key', 'removed')        
+
+    def getlist(self, instance):
+         for instance in Files:
+             print(instance, end = " ")
