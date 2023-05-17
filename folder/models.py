@@ -7,10 +7,11 @@ from django.conf import settings
 class Folder(models.Model):
     id = models.BigIntegerField(primary_key=True)
     folder_name = models.CharField(max_length=45)
-    created_at = models.DateTimeField(blank=True, null=True)
-    updated_at = models.DateTimeField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now_add=True)
     users = models.ForeignKey(Users, models.DO_NOTHING)
     pfolder = models.ForeignKey('self', models.DO_NOTHING, db_column="folder_id")
+    removed = models.IntegerField(default=0)
 
     class Meta:
         managed = False

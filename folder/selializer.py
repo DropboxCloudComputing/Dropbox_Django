@@ -21,11 +21,10 @@ class GetSharedFolderSerializer(serializers.ModelSerializer):
 class CreateFolderSerializer(serializers.ModelSerializer):
     folder_name = serializers.CharField(max_length=45)
     # users = UserSerializer()
-    pfolder = FolderSerializer(many = True)
+    # pfolder = FolderSerializer() #(many = True)
 
     def create(self, validated_data):
         return Folder.objects.create(**validated_data)
     class Meta(object):
         model = Folder
         fields = ['folder_name', 'users','pfolder']
-
