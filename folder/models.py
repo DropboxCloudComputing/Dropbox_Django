@@ -8,7 +8,7 @@ class Folder(models.Model):
     id = models.BigIntegerField(primary_key=True)
     folder_name = models.CharField(max_length=45)
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     users = models.ForeignKey(Users, models.DO_NOTHING)
     pfolder = models.ForeignKey('self', models.DO_NOTHING, db_column="folder_id")
     removed = models.IntegerField(default=0)

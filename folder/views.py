@@ -163,7 +163,70 @@ def folderDelete(request) :
                 #     return response
 
 def folderVerifyName(request) :
-    return 0
+    if request.method == 'POST' :
+        data = JSONParser().parse(request)
+
+        print("*****data = ")
+        print(data)
+
+        input_name = data['folder_name']
+
+        user_token = request.headers.get("Authorization", None)
+        payload_data = decode_jwt_token(user_token)
+
+        if user_token == None :
+                response = JsonResponse({
+                    "ResponseCode":401,
+                    "description" : "권한이 없습니다."
+                    }, status=401)
+                return response
+        else :
+            current_folder_id = request.GET['current_folder_id']
+
+            print(current_folder_id)
+            
+            current_folder = Folder.objects.get(pk = current_folder_id)
+
+            # 원래의 나랑 폴더 이름이 같은 경우 
+            # -> 현재와 이름이 같아, 수정 불가능 response
+            if current_folder.folder_name == input_name : 
+                response = JsonResponse({
+                    "ResponseCode":400,
+                    "description" : "현재 이름과 같습니다."
+                    }, status=400)
+                return response
+            else : # 원래의 나랑은 다르고,
+                # db에서 input 폴더 이름으로 된 폴더 객체가 이미 존재하는 경우
+                # -> 중복된 폴더 이름 response
+
+                try :
+                    already_exist = Folder.objects.get(folder_name = input_name)
+                    print(already_exist.exist())
+
+                    if already_exist.exist() :
+                        response = JsonResponse({
+                        "ResponseCode" : 400,
+                        "description" : "폴더명 중복"
+                        }, status=400)
+                    return response
+
+                except Folder.DoesNotExist :
+                    # 중복X, 현재이름과 같음X -> 이름 수정해서 저장 & 성공 response
+                    current_folder.folder_name = input_name
+                    # current_folder.updated_at = datetime
+                    current_folder.save()
+                    response = HttpResponse(status = 200)
+                    return response
+
+
+                # if Folder.objects.get(folder_name = input_name).exist() :
+                #     response = JsonResponse({
+                #         "ResponseCode":400,
+                #         "description" : "폴더명 중복"
+                #         }, status=400)
+                #     return response
+
+            
 
 def getSharedFolders(request):
     if request.method == 'GET':
