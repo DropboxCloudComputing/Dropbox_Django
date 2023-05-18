@@ -3,6 +3,7 @@ from .models import Files
 from rest_framework.response import Response
 from rest_framework import status
 from .serializers import *
+from rest_framework_simplejwt.authentication import JWTTokenUserAuthentication
 
 class FileList(APIView):
     serializer_class = FilesSerializer
@@ -16,9 +17,9 @@ class FileDetail(APIView):
     def get(self, request, id):
         try:   
             model = Files.objects.get(id = id)            
+            model.increase_view_count()
         except Files.DoesNotExist:
             return Response({'message': 'The file does not exist'}, status=status.HTTP_404_NOT_FOUND)
-
         serializers = FilesSerializer(model)
         return Response(serializers.data)
     
@@ -31,6 +32,7 @@ class MemoList(APIView):
         return Response(serializer.data)
 
 class MemoDetail(APIView):
+    authentication_classes = [JWTTokenUserAuthentication]
     serializer_class = MemoSerializer
     
     def get(self, request, id):

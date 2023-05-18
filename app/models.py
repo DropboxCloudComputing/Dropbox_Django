@@ -17,6 +17,11 @@ class Files(models.Model):
     version = models.IntegerField(default=1)
     removed = models.BooleanField(default=False)
     s3key = models.CharField(max_length=255, null=True)
+    view_count = models.IntegerField(default=0) # 조회 횟수를 기록하는 어트리뷰트
+
+    def increase_view_count(self):
+        self.view_count += 1
+        self.save()
 
     class Meta:
         managed = True
