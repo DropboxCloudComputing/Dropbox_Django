@@ -17,12 +17,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from app.views import FileList,MemoDetail,FileDetail,MemoList
+from app.views import FileList,MemoDetail,FileDetail,MemoList,FileFavoriteToggle
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/file_list', FileList.as_view(), name = 'File_list'),
+    path('api/file_list/', FileList.as_view(), name = 'File_list'),
     path('api/file_list/<int:id>' , FileDetail.as_view(), name = 'File_detail'),
     path('api/memos/<int:id>' , MemoDetail.as_view(), name = 'Memo_Detail'),
-    path('api/memos' , MemoList.as_view(), name = 'Memo_list') 
+    path('api/memos' , MemoList.as_view(), name = 'Memo_list'), 
+    path('api/file_list/<int:id>/favorite/', FileFavoriteToggle.as_view(), name='file-favorite-toggle'),
 ]
