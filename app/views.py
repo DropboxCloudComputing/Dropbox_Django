@@ -7,29 +7,39 @@ from rest_framework_simplejwt.authentication import JWTTokenUserAuthentication
 
 class FileList(APIView):
     serializer_class = FilesSerializer
-
+    # 파일을 정렬해서 보여주는 메소드
     def get(self, request):
-        sort = request.query_params.get('sort', None)
-        
+        sort_by = request.query_params.get('sort_by', 'id')
+        sort_order = request.query_params.get('sort_order', 'asc')
+                
         #파일을 이름, 사이즈, 즐겨찾기, 조회된 순서 로 가져옴 ## default 는 id 순서대로
-        if sort == 'name':
-            files = Files.objects.all().order_by('-file_name')
+        if sort_by == 'name':
+            sort_field = 'file_name'
         
-        elif sort == 'size':
-            files = Files.objects.all().order_by('-size')
+        elif sort_by == 'size':
+            sort_field = 'size'
         
-        elif sort == 'favorites':
-            files = Files.objects.all().order_by('-favorites')
+        elif sort_by == 'favorites':
+            sort_field = 'favorites'
         
-        elif sort == 'view_count':
-            files = Files.objects.all().order_by('-view_count')
+        elif sort_by == 'view_count':
+            sort_field = 'view_count'
         
+        #기본 정렬은 id 순서대로
         else:
-            files = Files.objects.all()
+            sort_field = 'id'
             
-        serializer = FilesSerializer(files, many = True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        # 정렬 방식에 따라 정렬 수행
+        if sort_order == 'desc':
+            sort_field = '-' + sort_field  # 내림차순 정렬을 위해 '-' 추가
+            
+        #api/file_list/?sort_by=name&sort_order=desc
+        
+        files = Files.objects.all().order_by(sort_field)
+        serializers = FilesSerializer(files, many=True)
+        return Response(serializers.data, status=status.HTTP_200_OK)
     
+
 class FileDetail(APIView):
     def get(self, request, id):
         try:   
