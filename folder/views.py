@@ -233,7 +233,7 @@ def getSharedFolder(folderId):
 def getSharedFolders(request):
     if request.method == 'GET':
         try:
-            token = request.headers.get('Authorization')
+            token = request.headers.get('Authorization').split(" ")[1]
             payload = decode_jwt_token(token) 
             user = Users.objects.get(id = payload["user_id"])
         except AuthenticationFailed:
@@ -256,7 +256,7 @@ def shareFolder(request):
         if Folder.objects.filter(id=data['folderId']).exists():
             folder = Folder.objects.get(id=data['folderId'])
             try:
-                token = request.headers.get('Authorization')
+                token = request.headers.get('Authorization').split(" ")[1]
                 payload = decode_jwt_token(token) 
                 user = Users.objects.get(id=payload["user_id"])
                 if user.id != folder.users.id:
