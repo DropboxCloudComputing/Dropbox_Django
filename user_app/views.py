@@ -72,6 +72,7 @@ def signup(request):
                     "ResponseCode":400,
                     "description" : "중복 id"
                 }, status=400)
+
                 return HttpResponse(status=400)
 
             elif '@' not in input_email or '.' not in input_email : # 형식이 맞지 않는 경우
