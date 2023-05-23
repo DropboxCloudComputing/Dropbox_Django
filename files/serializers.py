@@ -47,3 +47,8 @@ class FileDeleteSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("You don't have permission to delete this file.")
 
         return attrs
+    
+class FilesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Files 
+        fields = '__all__'
