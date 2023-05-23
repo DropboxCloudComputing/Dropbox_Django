@@ -14,5 +14,6 @@ urlpatterns = [
     path('memos/<int:id>' , MemoDetail.as_view(), name = 'Memo_Detail'),
     path('memos' , MemoList.as_view(), name = 'Memo_list'), 
     path('files/<int:id>/favorite/', FileFavoriteToggle.as_view(), name='file-favorite-toggle'),
+#    path('file-search/<int:sort_id>', FileSearch.as_view(), name='file-search'),
 
 ]

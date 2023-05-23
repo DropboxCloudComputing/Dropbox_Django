@@ -13,9 +13,9 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 from datetime import timedelta #for jwt
 import os
-# from dotenv import load_dotenv
+from dotenv import load_dotenv
 
-# load_dotenv()
+load_dotenv()
 
 AWS_ACCESS_KEY_ID = ' '#os.getenv('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY =' '# os.getenv('AWS_SECRET_ACCESS_KEY')
@@ -46,11 +46,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     
-    'app',
-    'files',
     'rest_framework',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
+    'files',
+    'user_app',
 ]
 
 REST_FRAMEWORK = {
@@ -153,7 +153,7 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
 }
 
-# AUTH_USER_MODEL = "user_app.Users"
+AUTH_USER_MODEL = "user_app.Users"
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
