@@ -10,7 +10,9 @@ from django.http import JsonResponse
 from django.contrib import messages
 from .UserSerializer import UserSerializer
 
-
+import jwt
+from rest_framework.exceptions import AuthenticationFailed
+from dropbox.settings import SECRET_KEY
 
 def login_view(request):
         if request.method == 'POST' :
@@ -102,3 +104,22 @@ def modify(request):
     # instance = serializer.create(validated_data=validated)
     # print(instance)
     return 0
+
+def checkUser(request):
+    user_token = request.headers.get("Authorization", None).split(" ")[1]
+    print(user_token)
+    payload_data = decode_jwt_token(user_token)
+    user = Users.objects.get(id= payload_data['user_id'])
+    return user
+
+# 토큰에서 payload 추출
+def decode_jwt_token(token):
+    payload = jwt.decode(token, SECRET_KEY, 'HS256')
+    return payload
+    # try:
+    #     payload = jwt.decode(token, SECRET_KEY, 'HS256')
+    #     return payload
+    # except jwt.ExpiredSignatureError:
+    #     raise AuthenticationFailed('Token expired')
+    # except jwt.InvalidTokenError:
+    #     raise AuthenticationFailed('Invalid token')
