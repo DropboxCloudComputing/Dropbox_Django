@@ -23,6 +23,30 @@ class Files(models.Model):
         self.view_count += 1
         self.save()
 
+    def removing(self, *args, **kwargs):
+        # Mark the file as removed instead of actually deleting it
+        self.removed = True
+        self.save()
+
+    def recover(self, *args, **kwargs):
+        # Mark the file as False from removed
+        self.removed = False
+        self.save(update_fields=['removed'])
+
+    '''def completely_delete(self,  *args, **kwargs):
+        # Delete the file from the S3 bucket
+        s3_client = boto3.client(
+            's3',
+            aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+            aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY
+        )
+        s3_bucket_name = 'suhron'
+        s3_key = self.s3key.split('/')[-1]
+        s3_client.delete_object(Bucket=s3_bucket_name, Key=s3_key)
+
+        # Delete the file from the database
+        self.delete()'''
+
     class Meta:
         managed = True
         db_table = "files"
