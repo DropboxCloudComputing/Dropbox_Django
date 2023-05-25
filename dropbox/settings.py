@@ -11,10 +11,28 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 from pathlib import Path
-import pymysql
 from datetime import timedelta #for jwt
+import os
+#from dotenv import load_dotenv
+#load_dotenv()
 
+
+import pymysql
 pymysql.install_as_MySQLdb()
+
+
+# Get the S3 keys from environment variables
+#AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
+#AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
+
+
+
+# DB 정보
+#DB_NAME = os.getenv('DB_NAME')
+#DB_USER = os.getenv('DB_USER')
+#DB_PASSWORD = os.getenv('DB_PASSWORD')
+#DB_HOST = os.getenv('DB_HOST')
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -42,9 +60,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
 
-    'app',
-    'rest_framework',# 프레임워크 추가
+    'files',
+    'trashbin',     # 휴지통 추가
+    'app',     
+    'rest_framework',   # 프레임워크 추가
     'user_app',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
@@ -84,13 +105,15 @@ WSGI_APPLICATION = 'dropbox.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
+
+### local -> RDS
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'kkhugit',#db명
-        'USER': 'root', #db user 이름
-        'PASSWORD': '00000000', #db password
-        'HOST': 'localhost', #나중에 aws로 연결
+        'NAME': 'kkhugit',  #DB_NAME,#db명
+        'USER': 'root', #DB_USER, #db user 이름
+        'PASSWORD': '0000',  #DB_PASSWORD, #db password
+        'HOST': 'localhost', #DB_HOST, #rds 엔드포인트
         'PORT': '3306', #mysql 포트번호
     }
 }

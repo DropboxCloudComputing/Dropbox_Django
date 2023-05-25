@@ -4,6 +4,16 @@ import os
 import sys
 
 
+# import dotenv
+
+# os.environ.get('AWS_ACCESS_KEY_ID')
+# os.environ.get('AWS_SECRET_ACCESS_KEY')
+# os.environ.get('DB_NAME')
+# os.environ.get('DB_USER')
+# os.environ.get('DB_PASSWORD')
+# os.environ.get('DB_HOST')
+
+
 def main():
     """Run administrative tasks."""
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'dropbox.settings')
@@ -17,6 +27,7 @@ def main():
         ) from exc
     execute_from_command_line(sys.argv)
 
-
 if __name__ == '__main__':
+    #dotenv.read_dotenv()
     main()
+
