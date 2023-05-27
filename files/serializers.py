@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import Files
+from django.utils import timezone
 import os
 
 
@@ -14,7 +15,6 @@ class FileUploadSerializer(serializers.ModelSerializer):
             'file_name': {'write_only': True},
             'size': {'write_only': True},
         }
-
 
     def create(self, validated_data):
         print(validated_data)
@@ -58,3 +58,33 @@ class FilesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Files 
         fields = '__all__'
+        
+    def update(self, instance, validated_data): 
+        instance.memo = validated_data.get('memo', instance.memo)
+        instance.last_modified = timezone.now()
+        instance.save()
+        return instance
+        
+    
+# class FileSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Files
+#         fields = ('__all__')        
+        
+        
+class MemoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Files
+        fields = ('id', 'memo')
+        read_only_fields = ('id',)
+        
+'''    def update(self, instance, validated_data):
+        instance.memo = validated_data.get('memo', instance.memo)
+        instance.last_modified = timezone.now()
+        instance.save()
+        return instance
+    
+    def delete(self, instance, validated_data):
+        instance.memo = ""
+        return instance
+'''

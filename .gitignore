@@ -4,4 +4,6 @@ __pycache__
 myvenv
 /static
 .DS_Store
+<<<<<<< HEAD
 .env
+dropbox/my_settings.py

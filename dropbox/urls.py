@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 """dropbox URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
@@ -20,8 +21,8 @@ from django.views.generic.base import TemplateView
 
 urlpatterns=[
     path('admin/', admin.site.urls),
-    path('user_app/', include("user_app.urls")),
-    path('folders/', include("folder.urls")),
-    path('trashbin/', include("trashbin.urls")),
-    path('files/', include("files.urls")),
+    path('api/v1/user_app/', include("user_app.urls")),
+    path('api/v1/folders/', include("folder.urls")),
+    path('api/v1/trashbin/', include("trashbin.urls")),
+    path('api/v1/files/', include("files.urls")),
 ]

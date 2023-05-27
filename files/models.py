@@ -1,3 +1,4 @@
+
 from django.conf import settings
 from django.db import models
 from django.utils import timezone
@@ -14,8 +15,9 @@ class Files(models.Model):
     folder_id = models.IntegerField(null=True)
     created_at = models.DateTimeField(default=timezone.now)
     last_modified = models.DateTimeField(default=timezone.now)
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    #user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     #user_id = models.ForeignKey(User, to_field='id',db_column="users_id", on_delete=models.CASCADE)#to_field='user_id'
+    user_id = models.ForeignKey(User, to_field='id', on_delete=models.CASCADE)
     memo = models.TextField(null=True)
     version = models.IntegerField(default=1)
     removed = models.BooleanField(default=False)
@@ -28,6 +30,12 @@ class Files(models.Model):
         self.save(update_fields=['clicked'])
 
     ### TrashBin
+    view_count = models.IntegerField(default=0) # 조회 횟수를 기록하는 어트리뷰트
+
+    def increase_view_count(self):
+        self.view_count += 1
+        self.save()
+
     def removing(self, *args, **kwargs):
         # Mark the file as removed instead of actually deleting it
         self.removed = True
@@ -39,20 +47,23 @@ class Files(models.Model):
         self.save(update_fields=['removed'])
 
 
-    def completely_delete(self,  *args, **kwargs):
+    '''def completely_delete(self,  *args, **kwargs):
         # Delete the file from the S3 bucket
         s3_client = boto3.client(
             's3',
             aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
             aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY
         )
-        s3_bucket_name = 'bucket-cca'
+
+        s3_bucket_name = 'suhron'
         s3_key = self.s3key.split('/')[-1]
         s3_client.delete_object(Bucket=s3_bucket_name, Key=s3_key)
 
         # Delete the file from the database
-        self.delete()
+
+        self.delete()'''
 
     class Meta:
         managed = True
         db_table = "files"
+ 

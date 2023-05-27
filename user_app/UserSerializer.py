@@ -16,6 +16,7 @@ class UserSerializer(serializers.Serializer) :
 
     def create(self, validated_data):
         return Users.objects.create(**validated_data)
+<<<<<<< HEAD
 
     
     # def update(self, instance, validated_data):
@@ -26,3 +27,5 @@ class UserSerializer(serializers.Serializer) :
     #     instance.save()
 
     #     return instance
+=======
+>>>>>>> origin/s_hoo

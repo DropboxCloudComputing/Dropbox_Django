@@ -56,4 +56,7 @@ class SigninSirializer(serializers.ModelSerializer):
     
     def update(instance, validated_data):
         instance.token = validated_data.get('refresh_token', instance.token)
+        
         instance.save()
+        
+    
