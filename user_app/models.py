@@ -34,10 +34,11 @@ from django.contrib.auth.models import (BaseUserManager, AbstractBaseUser)
 
 
 # Create your models here.
+
 class Users(AbstractBaseUser):
     username = None
     last_login = None
-    # id = models.BigIntegerField(primary_key=True)
+    id = models.BigIntegerField(primary_key=True)
     full_name = models.CharField(max_length=45)
     email = models.CharField(unique=True, max_length=45)
     password = models.CharField(max_length=45)
