@@ -15,6 +15,7 @@ class Files(models.Model):
     created_at = models.DateTimeField(default=timezone.now)
     last_modified = models.DateTimeField(default=timezone.now)
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    #user_id = models.ForeignKey(User, to_field='id',db_column="users_id", on_delete=models.CASCADE)#to_field='user_id'
     memo = models.TextField(null=True)
     version = models.IntegerField(default=1)
     removed = models.BooleanField(default=False)

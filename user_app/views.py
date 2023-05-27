@@ -16,11 +16,11 @@ def login_view(request):
         if request.method == 'POST' :
             data = JSONParser().parse(request) # password = request.data['password']
             tokenData = SigninSirializer.validate(data)
-
+            if type(tokenData) is JsonResponse:
+                return tokenData
             email = data['email']
             user = Users.objects.get(email = email)
-            SigninSirializer.update(user, tokenData
-                                    )
+            SigninSirializer.update(user, tokenData)
             response = JsonResponse({
                 'user' : str(tokenData['user']),
                 'access_token' : tokenData['access_token'],

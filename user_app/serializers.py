@@ -28,10 +28,9 @@ class SigninSirializer(serializers.ModelSerializer):
         # password = data.get('password',None)
         email = data['email']
         password = data['password']
-        user = Users.objects.get(email=email)
 
         if Users.objects.filter(email=email).exists():
-            
+            user = Users.objects.get(email = email)
 
             if user.password != password: #not check_password(user.password ,password)->암호화
                 return JsonResponse({

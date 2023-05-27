@@ -32,7 +32,7 @@ def folderCreate(request) :
         # print("*****type of data = ")
         # print(type(data))
 
-        user_token = request.headers.get("Authorization", None)
+        user_token = request.headers.get("Authorization", None).split(" ")[1]
          # 토큰으로부터 데이터 받아와서
         payload_data = decode_jwt_token(user_token) #print token, payload type, payload user_id
 
@@ -111,7 +111,7 @@ def folderCreate(request) :
 def folderDelete(request) :
     # models.py - removed : 지워지면 1, 존재하면 0
     if request.method == 'POST' :
-        user_token = request.headers.get("Authorization", None)
+        user_token = request.headers.get("Authorization", None).split(" ")[1]
         payload_data = decode_jwt_token(user_token)
         # user = Users.objects.get(id= payload_data['user_id'])
         
@@ -173,7 +173,7 @@ def folderVerifyName(request) :
 
         input_name = data['folder_name']
 
-        user_token = request.headers.get("Authorization", None)
+        user_token = request.headers.get("Authorization", None).split(" ")[1]
         payload_data = decode_jwt_token(user_token)
 
         if user_token == None :
@@ -229,8 +229,6 @@ def folderVerifyName(request) :
                 #     return response
 
             
-def getSharedFolder(folderId):
-    return Folder.objects.get(id = folderId)
 
 def getSharedFolders(request):
     if request.method == 'GET':
