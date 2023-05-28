@@ -5,8 +5,6 @@ from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework_simplejwt.authentication import JWTAuthentication
-# from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.parsers import MultiPartParser, FormParser
 from .serializers import *
@@ -15,6 +13,10 @@ import boto3
 import string
 import random
 from django.utils import timezone
+from user_app.views import checkUser
+from .models import Files
+from django.http import JsonResponse
+from user_app.models import Users
 
 ## This is a random string generator
 def id_generator(size=10, chars=string.ascii_uppercase + string.digits):
@@ -213,4 +215,24 @@ class FilePermanentDeleteView(APIView):
 
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+class FileSearch(APIView):
+    def get(self, request, **kwargs):
+        sort = kwargs["sort_id"]
+        user = checkUser(request)
+        user = Users.objects.get(id = user.id)
+        kwd = request.GET["kwd"]
+        if kwd is None:
+            filesQueryset = Files.objects.filter(user_id=user.id)
+        else:
+            filesQueryset = Files.objects.filter(user_id=user, file_name__icontains=kwd)
+        
+        if sort == 1:
+            filesQueryset = filesQueryset.order_by("-last_modified")
+        elif sort == 2:
+            filesQueryset = filesQueryset.order_by("file_name")
+        elif sort == 3:
+            filesQueryset = filesQueryset.order_by("size")
+        
 
+        serializer = FilesSerializer(filesQueryset, many=True)
+        return JsonResponse(serializer.data, safe=False)
