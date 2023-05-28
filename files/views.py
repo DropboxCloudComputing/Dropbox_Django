@@ -14,7 +14,7 @@ from .models import Files
 import boto3
 import string
 import random
-from pytz import timezone
+from django.utils import timezone
 
 ## This is a random string generator
 def id_generator(size=10, chars=string.ascii_uppercase + string.digits):
@@ -104,7 +104,8 @@ class FileList(APIView):
         #api/files/?sort_by=name&sort_order=desc
         
         files = Files.objects.all().order_by(sort_field)
-        serializers = FileSerializer(files, many=True)
+        serializers = FilesSerializer(files, many=True)
+        print(serializers.data)
         return Response(serializers.data, status=status.HTTP_200_OK)
     
 
@@ -116,7 +117,7 @@ class FileDetail(APIView):
             models = Files.objects.filter(file_name=model.file_name).order_by('-version')
         except Files.DoesNotExist:
             return Response({'message': 'The file does not exist'}, status=status.HTTP_404_NOT_FOUND)
-        serializers = FileSerializer(model)
+        serializers = FilesSerializer(model)
         return Response(serializers.data)
     
 class FileFavoriteToggle(APIView):

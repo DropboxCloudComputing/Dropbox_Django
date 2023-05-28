@@ -6,7 +6,7 @@ from django.conf import settings
 
 # Create your models here.
 class Folder(models.Model):
-    id = models.AutoField(primary_key=True)
+    id = models.BigAutoField(primary_key=True)
     folder_name = models.CharField(max_length=45)
     created_at = models.DateTimeField(default=timezone.now)#auto_now_add=True, 
     updated_at = models.DateTimeField(default=timezone.now)#auto_now=True, 

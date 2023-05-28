@@ -8,7 +8,7 @@ import boto3
 User = get_user_model()
 
 class Files(models.Model):
-    id = models.AutoField(primary_key=True)
+    id = models.BigAutoField(primary_key=True)
     file_name = models.CharField(max_length=255)
     size = models.IntegerField()
     favorites = models.BooleanField(default=False)
@@ -23,14 +23,13 @@ class Files(models.Model):
     removed = models.BooleanField(default=False)
     s3key = models.CharField(max_length=255, null=True)
     clicked = models.IntegerField(default=0)
+    view_count = models.IntegerField(default=0) # 조회 횟수를 기록하는 어트리뷰트
 
     def watched(self, *args, **kwargs):
         # Mark the file as False from removed
         self.clicked +=1
         self.save(update_fields=['clicked'])
-
-    ### TrashBin
-    view_count = models.IntegerField(default=0) # 조회 횟수를 기록하는 어트리뷰트
+   
 
     def increase_view_count(self):
         self.view_count += 1

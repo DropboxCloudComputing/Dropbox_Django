@@ -42,7 +42,11 @@ def login_view(request):
 
 
 def logout(request):
+    user = checkUser(request)
+    Users.objects.filter(id = user.id).update(token = "")
+
     if request.method == 'POST':
+
         response = JsonResponse({
             "ResponseCode":200,
             "message" : "success"
