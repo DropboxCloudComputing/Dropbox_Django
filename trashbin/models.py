@@ -7,7 +7,7 @@ import boto3
 User = get_user_model()
 
 class TrashBin(models.Model):
-    files_id = models.BigIntegerField()
+    files_id = models.BigIntegerField(null= True)
     folder_id = models.BigIntegerField(null = True)
     users_id = models.BigIntegerField(primary_key = True)
     deleted_at = models.DateTimeField(auto_now_add = True)

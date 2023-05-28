@@ -10,10 +10,13 @@ from rest_framework import status
 import itertools
 
 from user_app.models import Users
+
 from files.models import Files
 from files.serializers import FilesSerializer
-# from trashbin.models import Trashbin
-# from trashbin.serializers import TrashbinSerializer
+
+from trashbin.models import TrashBin
+from trashbin.serializers import TrashBinSerializer
+
 from django.core.serializers import serialize
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.exceptions import AuthenticationFailed
@@ -55,6 +58,7 @@ def folderCreate(request) :
 
         if serializer.is_valid() :
             # print(user_token)
+            # token이 들어오지 않은 경우
             if user_token == None :
                 response = JsonResponse({
                     "ResponseCode":401,
@@ -126,6 +130,7 @@ def folderDelete(request) :
             print(current_folder_id)
             
             current_folder = Folder.objects.get(pk = current_folder_id)
+            print(current_folder)
 
             if current_folder.removed :
                 response = JsonResponse({
@@ -135,34 +140,39 @@ def folderDelete(request) :
                 return response
             
             else :
+                # folder db에서 removed 1로 변경 및 저장
                 current_folder.removed = 1
                 current_folder.save()
-                return HttpResponse(status = 200)
-                # serializer = TrashbinSerializer(Folder = current_folder)
 
-                # print(serializer.is_valid())
-                # print(serializer.errors)
-                # print(serializer.validated_data)
+                data = current_folder.__dict__
+                data['folder_id'] = current_folder_id
+                print(current_folder.__dict__)
 
-                # if serializer.is_valid() :
-                #     serializer.save()
-                #     if Trashbin.object.get(folder_id = current_folder_id).exist() :
-                #         response = HttpResponse(status=200)
-                #         return response
-                #     else :
-                #         response = JsonResponse({
-                #             "ResponseCode":400,
-                #             "description" : "휴지통으로 이동 실패"
-                #             }, status=400)
-                #         return response
+                serializer = TrashBinSerializer(data=data)
+
+                print(serializer.is_valid())
+                print(serializer.errors)
+                print(serializer.validated_data)
+
+                if serializer.is_valid() :
+                    serializer.save()
+                    if TrashBin.objects.filter(folder_id = current_folder_id).exists() :
+                        response = HttpResponse(status=200)
+                        return response
+                    else :
+                        response = JsonResponse({
+                            "ResponseCode":400,
+                            "description" : "휴지통으로 이동 실패"
+                            }, status=400)
+                        return response
 
 
-                # else :
-                #     response = JsonResponse({
-                #         "ResponseCode":400,
-                #         "description" : "휴지통으로 이동 실패(파일이 유효하지 않음)"
-                #         }, status=400)
-                #     return response
+                else :
+                    response = JsonResponse({
+                        "ResponseCode":400,
+                        "description" : "휴지통으로 이동 실패(파일이 유효하지 않음)"
+                        }, status=400)
+                    return response
 
 def folderVerifyName(request) :
     if request.method == 'POST' :
