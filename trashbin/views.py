@@ -91,7 +91,10 @@ class FileRecoverAPI(APIView):
             
             # 30일 초과면 복구 불가
             else:
-               return Response({"detail": "File cannot be restored."}, status=status.HTTP_501_NOT_IMPLEMENTED)
+                # 휴지통에서 삭제
+                # 파일 영구 삭제 -> response ?
+                trash_file.delete()
+                return Response({"detail": "File cannot be restored."}, status=status.HTTP_404_NOT_FOUND)
             
         except Files.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
