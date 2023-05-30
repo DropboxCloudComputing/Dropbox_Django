@@ -31,7 +31,7 @@ def folderCreate(request) :
         data = JSONParser().parse(request)
 
         # print("*****data = ")
-        # print(data)
+        print(data)
         # print("*****type of data = ")
         # print(type(data))
 
@@ -43,18 +43,32 @@ def folderCreate(request) :
 
         user = Users.objects.get(id= payload_data['user_id'])
         data['users'] = user.id # user
-        folder = Folder.objects.get(id=data['pfolder'])
-        data['pfolder'] = folder.id
+
+        if data['pfolder'] != 0 :
+            folder = Folder.objects.get(id=data['pfolder'])
+            data['pfolder'] = folder.id
+        else :
+            # 부모 폴더가 없는 경우 (request.pfolder == 0)
+            # 참조할 부모폴더id 없이, 검증 없이 저장
+            savedFolder = Folder(folder_name = data['folder_name'], users = user)
+            savedFolder.save()
+
+            response = JsonResponse({
+                        "id": savedFolder.id,
+                        "folder_name": savedFolder.folder_name,
+                        "user_id": savedFolder.users.id
+                    }, status=200)
+            return response
 
         # print("*****    Inserted user_id in data = ")
-        # print(data)
+        print(data)
 
         serializer = CreateFolderSerializer(data = data)
 
         # print("****    validation : ")
-        # print(serializer.is_valid())
-        # print(serializer.errors)
-        # print(serializer.validated_data)
+        print(serializer.is_valid())
+        print(serializer.errors)
+        print(serializer.validated_data)
 
         if serializer.is_valid() :
             # print(user_token)
@@ -81,20 +95,12 @@ def folderCreate(request) :
                     else : # 폴더 이름이 중복되지 않으면 db에 저장
                         serializer.save()
                         savedFolder = Folder.objects.get(folder_name = input_folderName)
-                        savedId = savedFolder.id
-                        
-                            
-                        # 부모 폴더가 없는 경우 (request.pfolder_id = 0)
-                        if savedFolder.pfolder == 0 :
-                            # 본인의 아이디를 참조하도록 수정 및 저장
-                            savedFolder.pfolder = savedId
-                            savedFolder.save()
 
                         response = JsonResponse({
-                                "id": savedId,
+                                "id": savedFolder.id,
                                 "folder_name": savedFolder.folder_name,
                                 "user_id": savedFolder.users.id
-                        }, status=200)
+                            }, status=200)
                         return response
 
                 else : # id 조회 불가능
