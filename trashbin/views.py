@@ -48,7 +48,7 @@ class TrashBinClearAPI(APIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
 
 
-# 파일 삭제 API (파일을 휴지통에 넣음.)
+# 파일 삭제 API (파일을 휴지통에 넣음)
 class FileRemoveAPI(APIView):
     # This class for removing file to Trash.
     permission_classes = [IsAuthenticated]
