@@ -40,14 +40,15 @@ class TrashBinClearAPI(APIView):
     def delete(self, request, format=None):
         try:
             trash_all = TrashBin.objects.all()
-            trash_all.delete()
+            # DB, S3에서 삭제
+            trash_all.completely_delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
         
         except TrashBin.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
 
-# 파일 삭제 API (파일을 휴지통에 넣음.)
+# 파일 삭제 API (파일을 휴지통에 넣음)
 class FileRemoveAPI(APIView):
     # This class for removing file to Trash.
     permission_classes = [IsAuthenticated]
@@ -57,16 +58,10 @@ class FileRemoveAPI(APIView):
             file.removing()  # This will mark the file as removed
 
             # TrashBin에 해당 파일 저장
-            try:
-                trash_file = TrashBin.objects.get(files_id = file_id)
-                
-            except:
-                trash_file = TrashBin(files_id = file_id, files_name = file_name, folder_id = fd_id, users_id = user_id)
-                trash_file.save()
-                return Response(status=status.HTTP_204_NO_CONTENT)
+            trash_file = TrashBin(files_id = file_id, files_name = file_name, folder_id = fd_id, users_id = user_id)
+            trash_file.save()
+            return Response(status=status.HTTP_204_NO_CONTENT)
             
-            return Response({"detail": "File already exists at trashbin."}, status=status.HTTP_501_NOT_IMPLEMENTED)
-        
         except Files.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
