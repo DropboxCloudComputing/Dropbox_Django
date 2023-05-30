@@ -21,6 +21,7 @@ import os
 
 
 # import pymysql
+# pymysql.version_info = (1, 4, 3, "final", 0)
 # pymysql.install_as_MySQLdb()
 
 
@@ -133,7 +134,7 @@ WSGI_APPLICATION = 'dropbox.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'dropbox_test',#db명
+        'NAME': 'kkhugit',#db명
         'USER': 'root', #db user 이름
         'PASSWORD': '', #db password
         'HOST': 'localhost', #나중에 aws로 연결
