@@ -179,42 +179,6 @@ class MemoDetail(APIView):
             return Response(serializers.data, status=status.HTTP_200_OK)
         return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class FileRemovetoTrashView(APIView):
-    # This class for removing file to Trash
-#    permission_classes = [IsAuthenticated]
-    def delete(self, request, file_id, format=None):
-        try:
-            file = Files.objects.get(id=file_id)
-            file.removing()  # This will mark the file as removed
-            return Response(status=status.HTTP_204_NO_CONTENT)
-        except Files.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
-
-class FileRecoverfromTrashView(APIView):
-    # This class for recoviring file from Trash
-#    permission_classes = [IsAuthenticated]
-    def put(self, request, file_id, format=None):
-        try:
-            file = Files.objects.get(id=file_id)
-            file.recover()  # This will mark the file as recovered
-            return Response(status=status.HTTP_204_NO_CONTENT)
-        except Files.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)        
-
-class FilePermanentDeleteView(APIView):
-    # This class for completely deleting file from s3 and db
-#    permission_classes = [IsAuthenticated]
-    def delete(self, request, file_id, format=None):
-        try:
-            file = Files.objects.get(id=file_id)
-        except Files.DoesNotExist:
-            return Response({"detail": "File not found."}, status=status.HTTP_404_NOT_FOUND)
-
-        # Call the completely_delete method to delete the file
-        file.completely_delete()
-
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
 class FileSearch(APIView):
     def get(self, request, **kwargs):
         sort = kwargs["sort_id"]
