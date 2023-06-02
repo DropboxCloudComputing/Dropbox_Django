@@ -36,7 +36,8 @@ def login_view(request):
             return response
         
         return JsonResponse({
-              "message":"http error"
+            "ResponseCode":403,
+            "message":"http error"
         })
   
 
@@ -53,6 +54,7 @@ def logout(request):
         })
     else:
          response = JsonResponse({
+             "ResponseCode":400,
             "message" : "error"
          })
     return response
