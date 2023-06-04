@@ -1,5 +1,6 @@
 from http.client import NOT_FOUND
 from django.conf import settings
+from dropbox import settings
 from django.http import FileResponse
 from django.shortcuts import render
 from rest_framework.views import APIView
@@ -33,7 +34,7 @@ class FileUploadView(APIView):
         if serializer.is_valid():
             file = request.FILES['file']
             s3_client = boto3.client('s3', aws_access_key_id=settings.AWS_ACCESS_KEY_ID, aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY)
-            s3_bucket_name = 'suhron'
+            s3_bucket_name = 'bucket-cca'
             s3_name = f"{id_generator(10)}.{file.name}"
             s3_client.upload_fileobj(file, s3_bucket_name, s3_name)
             s3_url =  f"https://{s3_bucket_name}.s3.amazonaws.com/{s3_name}"
@@ -63,7 +64,7 @@ class FileDownloadView(APIView):
             aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
             aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY
         )
-        s3_bucket_name = 'suhron'
+        s3_bucket_name = 'bucket-cca'
         file_obj = s3_client.get_object(Bucket=s3_bucket_name, Key=s3_key)
 
         # Prepare the file response

@@ -1,5 +1,6 @@
 
 from django.conf import settings
+from dropbox import settings
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth import get_user_model
@@ -44,7 +45,7 @@ class Files(models.Model):
         self.save(update_fields=['removed'])
 
 
-    '''def completely_delete(self,  *args, **kwargs):
+    def completely_delete(self,  *args, **kwargs):
         # Delete the file from the S3 bucket
         s3_client = boto3.client(
             's3',
@@ -52,13 +53,13 @@ class Files(models.Model):
             aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY
         )
 
-        s3_bucket_name = 'suhron'
+        s3_bucket_name = 'bucket-cca'
         s3_key = self.s3key.split('/')[-1]
         s3_client.delete_object(Bucket=s3_bucket_name, Key=s3_key)
 
         # Delete the file from the database
 
-        self.delete()'''
+        self.delete()
 
     class Meta:
         managed = True
