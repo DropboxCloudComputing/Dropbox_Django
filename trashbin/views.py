@@ -14,7 +14,7 @@ from datetime import datetime
 import boto3
 import string
 import random
-
+from .serializers import TrashBinSerializer
 
 ### TrashBin Functions
 
@@ -24,11 +24,11 @@ class TrashBinListAPI(APIView):
     permission_classes = [IsAuthenticated]
     def get(self, request, format=None):
         try:
-            trash_list = TrashBin.objects.all()
+            trash_list = TrashBin.objects.values()
             for obj in trash_list:
-                print(obj.files_name, obj.files_id, obj.folder_id, sep = '\t', end = '\n')
-            return Response(status=status.HTTP_200_OK)
-        
+                print(obj)
+            return Response(trash_list, status=status.HTTP_200_OK)
+
         except TrashBin.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
             
