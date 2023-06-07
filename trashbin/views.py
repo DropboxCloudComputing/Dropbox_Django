@@ -54,7 +54,7 @@ class TrashBinClearAPI(APIView):
 class FileRemoveAPI(APIView):
     # This class for removing file to Trash.
     permission_classes = [IsAuthenticated]
-    def delete(self, request, file_id, format=None):
+    def post(self, request, file_id, format=None):
         try:
             file = Files.objects.get(id=file_id)
             file.removing()  # This will mark the file as removed
@@ -90,7 +90,7 @@ class FileRecoverAPI(APIView):
 class FilePermanentlyDeleteAPI(APIView):
     # This class for completely deleting file from s3 and db
     permission_classes = [IsAuthenticated]
-    def delete(self, request, file_id, format=None):
+    def post(self, request, file_id, format=None):
         try:
             file = Files.objects.get(id=file_id)
             trash_file = TrashBin.objects.get(files_id=file_id)
