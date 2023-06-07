@@ -10,9 +10,10 @@ class TrashBin(models.Model):
     files_id = models.BigIntegerField(null = True)
     files_name = models.CharField(max_length=255)
     folder_id = models.BigIntegerField(null = True)
-    users_id = models.BigIntegerField(primary_key = True)
-    deleted_at = models.DateTimeField(auto_now_add = True)
-    restored_at = models.DateTimeField(auto_now = True)
+    users_id = models.ForeignKey(User, models.DO_NOTHING, null = True)
+    #users_id = models.CharField(primary_key = True)
+    deleted_at = models.DateTimeField(default=timezone.now)
+    restored_at = models.DateTimeField(default=timezone.now)
 
     class Meta:
         managed = True
