@@ -342,7 +342,7 @@ def shareFolder(request):
  
     
 def contentsInFolder(request):#현재 폴더를 읽는데 그 안에 폴더를 읽어야 하니까 부모 폴더가 현재 폴더 아이디인것
-    if request.method == 'GET':
+    if request.method == 'POST':
         data = JSONParser().parse(request)
         folderId = data['folderId']
 
