@@ -11,6 +11,7 @@ from rest_framework.parsers import MultiPartParser, FormParser
 from .serializers import *
 from .models import Files
 import boto3
+from botocore.config import Config
 import string
 import random
 from django.utils import timezone
@@ -18,6 +19,23 @@ from user_app.views import checkUser
 from .models import Files
 from django.http import JsonResponse
 from user_app.models import Users
+import datetime
+
+from django.core.serializers import serialize
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework.exceptions import AuthenticationFailed
+import jwt
+from dropbox.settings import SECRET_KEY
+import json
+
+def decode_jwt_token(token):
+    try:
+        payload = jwt.decode(token, SECRET_KEY, 'HS256')
+        return payload
+    except jwt.ExpiredSignatureError:
+        raise AuthenticationFailed('Token expired')
+    except jwt.InvalidTokenError:
+        raise AuthenticationFailed('Invalid token')
 
 ## This is a random string generator
 def id_generator(size=10, chars=string.ascii_uppercase + string.digits):
@@ -34,9 +52,14 @@ class FileUploadView(APIView):
         if serializer.is_valid():
             file = request.FILES['file']
             s3_client = boto3.client('s3', aws_access_key_id=settings.AWS_ACCESS_KEY_ID, aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY)
-            s3_bucket_name = 'bucket-cca'
+            s3_bucket_name = 'kkhugit'
             s3_name = f"{id_generator(10)}.{file.name}"
-            s3_client.upload_fileobj(file, s3_bucket_name, s3_name)
+            print("{0}".format(s3_name))
+            try:
+                s3_client.upload_fileobj(file, s3_bucket_name, s3_name)
+            except Exception as e:
+                print(e)
+                return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
             s3_url =  f"https://{s3_bucket_name}.s3.amazonaws.com/{s3_name}"
             serializer.validated_data['s3key'] = s3_url
             serializer.save()
@@ -57,18 +80,39 @@ class FileDownloadView(APIView):
 
         # Retrieve the S3 key for the file
         s3_key = file.s3key.split('/')[-1]
-        print(s3_key)
         # Download the file from S3
+        s3_config = Config(
+            region_name='ap-northeast-2',
+            signature_version='s3v4',
+            retries={
+                'max_attempts': 10,
+                'mode': 'standard'
+            }
+        )
+
         s3_client = boto3.client(
             's3',
             aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
-            aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY
+            aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+            config=s3_config
         )
-        s3_bucket_name = 'bucket-cca'
-        file_obj = s3_client.get_object(Bucket=s3_bucket_name, Key=s3_key)
+        s3_bucket_name = 'kkhugit'
+
+        url = s3_client.generate_presigned_url(
+            ClientMethod='get_object',
+            Params={
+                'Bucket': s3_bucket_name,
+                'Key': s3_key,
+            },
+            # url 생성 후 10초가 지나면 접근 불가
+            ExpiresIn=3600
+        )
+
+        #file_obj = s3_client.get_object(Bucket=s3_bucket_name, Key=s3_key)
 
         # Prepare the file response
-        response = FileResponse(file_obj['Body'].read())
+        #response = FileResponse(file_obj['Body'].read())
+        response = FileResponse(url)
         response['Content-Disposition'] = f'attachment; filename="{file.file_name}"'
 
         return response
@@ -114,13 +158,17 @@ class FileList(APIView):
 
 class FileDetail(APIView):
     def get(self, request, id):
+        user_token = request.headers.get("Authorization", None).split(" ")[1]
+        payload_data = decode_jwt_token(user_token) 
+        user = Users.objects.get(id= payload_data['user_id'])
+    
         try:   
-            model = Files.objects.get(id = id)            
+            model = Files.objects.get(id = id)     
             model.increase_view_count()
-            models = Files.objects.filter(file_name=model.file_name).order_by('-version')
+            models = Files.objects.filter(file_name = model.file_name,user_id = payload_data['user_id'])
         except Files.DoesNotExist:
             return Response({'message': 'The file does not exist'}, status=status.HTTP_404_NOT_FOUND)
-        serializers = FilesSerializer(model)
+        serializers = FilesSerializer(models,many=True)
         return Response(serializers.data)
     
 class FileFavoriteToggle(APIView):
@@ -201,3 +249,4 @@ class FileSearch(APIView):
 
         serializer = FilesSerializer(filesQueryset, many=True)
         return JsonResponse(serializer.data, safe=False)
+
